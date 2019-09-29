@@ -8,9 +8,11 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import NewsList from '../components/NewsList'
 
 export default function HomeScreen() {
   return (
@@ -42,16 +44,16 @@ export default function HomeScreen() {
           <Text style={styles.getStartedText}>
             This awesome app will save your day!
           </Text>
+          <Button
+            onPress={() => {
+              alert('You are breathtaking!');
+            }}
+            title="Press Me"
+          />
         </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
+        
       </ScrollView>
+      <NewsList key={'not okey'} />
 
       <View style={styles.tabBarInfoContainer}>
         <Text style={styles.tabBarInfoText}>
@@ -99,12 +101,6 @@ function DevelopmentModeNotice() {
 function handleLearnMorePress() {
   WebBrowser.openBrowserAsync(
     'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
   );
 }
 
