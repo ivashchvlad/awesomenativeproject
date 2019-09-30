@@ -1,32 +1,27 @@
 import React, {useState, useEffect} from 'react'
 import { getLatestStoriesId } from '../services/hnAPI';
+import StoryItem from '../components/StoryItem' 
 
 import {
-    Image,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Button,
+    Text
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
 function NewsList() {
-    const [news, setNews] = useState([]);
+    const [latestNews, setLatestNews] = useState([]);
     useEffect(() => {
-        getLatestStoriesId().then(res => setNews(res));
+        getLatestStoriesId().then(res => setLatestNews(res));
     },[])
-    if(!news) {
-        return <Text>Loading</Text>
+    if(!latestNews) {
+        return <Text>Loading latest news...</Text>
     }
     return (
         <FlatList
-            data={news}
-            renderItem={({item}) =>
-                <Text key={item}>{item.toString()}</Text>
+            data={latestNews}
+            renderItem={({item, id}) =>
+                <StoryItem storyId={item} />
             }
+            keyExtractor={item => item.id}
         />
     )
 }
