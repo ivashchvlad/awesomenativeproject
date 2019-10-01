@@ -51,22 +51,8 @@ export default function HomeScreen() {
             title="Press Me"
           />
         </View>
-        
+        <NewsList />
       </ScrollView>
-      <NewsList key={'not okey'} />
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
-      </View>
     </View>
   );
 }
@@ -108,6 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 20,
   },
   developmentModeText: {
     marginBottom: 20,
@@ -117,7 +104,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 30,
+    paddingTop: 0,
   },
   welcomeContainer: {
     alignItems: 'center',

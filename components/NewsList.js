@@ -3,11 +3,12 @@ import { getLatestStoriesId } from '../services/hnAPI';
 import StoryItem from '../components/StoryItem' 
 
 import {
-    Text
+    Text,
+    StyleSheet
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-function NewsList() {
+const NewsList = () => {
     const [latestNews, setLatestNews] = useState([]);
     useEffect(() => {
         getLatestStoriesId().then(res => setLatestNews(res));
@@ -19,11 +20,19 @@ function NewsList() {
         <FlatList
             data={latestNews}
             renderItem={({item, id}) =>
-                <StoryItem storyId={item} />
+                <StoryItem key={id} storyId={item} />
             }
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index.toString()}
+            style={styles.flatList}
         />
     )
 }
+
+const styles = StyleSheet.create({
+    flatList: {
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        paddingBottom: 20
+    }
+})
 
 export default NewsList
