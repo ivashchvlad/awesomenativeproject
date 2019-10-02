@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import { getPopularStories } from '../services/hnAPI'
 import NewsList from '../components/NewsList'
 
 export default function HomeScreen() {
@@ -34,7 +35,7 @@ export default function HomeScreen() {
         <View style={styles.getStartedContainer}>
           { /*<DevelopmentModeNotice /> */}
 
-          <Text style={styles.getStartedText}>Hi there! How's it going?</Text>
+          <Text style={styles.getStartedText}>Hello there! How's it going?</Text>
 
           <View
             style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -51,7 +52,7 @@ export default function HomeScreen() {
             title="Press Me"
           />
         </View>
-        <NewsList />
+        <NewsList getStories={getPopularStories}/>
       </ScrollView>
     </View>
   );
