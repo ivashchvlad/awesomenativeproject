@@ -4,9 +4,9 @@ import { ExpoLinksView } from '@expo/samples';
 import NewsList from '../components/NewsList'
 import { getAskStories } from '../services/hnAPI'
 
-export default function AskScreen() {
+export default function AskScreen(props) {
   return (
-    <NewsList getStories={getAskStories}/>  
+    <NewsList getStories={getAskStories} navigation={props.navigation}/>  
   );
 }
 

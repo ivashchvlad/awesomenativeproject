@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import { getLatestStoriesId } from '../services/hnAPI';
 import StoryItem from '../components/StoryItem' 
 
 import {
@@ -8,10 +7,10 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-const NewsList = () => {
+const NewsList = ({getStories, navigation}) => {
     const [latestNews, setLatestNews] = useState([]);
     useEffect(() => {
-        getLatestStoriesId().then(res => setLatestNews(res));
+        getStories().then(res => setLatestNews(res));
     },[])
     if(!latestNews) {
         return <Text>Loading latest news...</Text>
@@ -20,7 +19,7 @@ const NewsList = () => {
         <FlatList
             data={latestNews}
             renderItem={({item, id}) =>
-                <StoryItem key={id} storyId={item} />
+                <StoryItem key={id} storyId={item} navigation={navigation}/>
             }
             keyExtractor={(item, index) => index.toString()}
             style={styles.flatList}

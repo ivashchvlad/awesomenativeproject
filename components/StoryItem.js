@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import * as WebBrowser from 'expo-web-browser';
 import { getStory } from '../services/hnAPI';
 
+import * as WebBrowser from 'expo-web-browser';
+import { Ionicons } from '@expo/vector-icons'
 import {
     Text,
     View,
@@ -9,23 +10,23 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
-const StoryItem = ({ storyId }) => {
+const StoryItem = (props) => {
     const [story, setStory] = useState();
     useEffect(() => {
-        getStory(storyId).then(_story => setStory(_story));
+        getStory(props.storyId).then(_story => setStory(_story));
     }, [])
 
     const handleStoryPress = () => {
-        if (story.url) WebBrowser.openBrowserAsync(story.url);
+        (story.url) ? WebBrowser.openBrowserAsync(story.url) : props.navigation.push("Story");
     }
 
-    if (!story) return <Text key={storyId + 1}>loading story</Text>;
+    if (!story) return <Text key={props.storyId + 1}>loading story</Text>;
     return (
         <TouchableWithoutFeedback
             onPress={handleStoryPress}
         >
             <View
-                key={storyId + story.by}
+                key={props.storyId + story.by}
                 style={styles.story}    
             >
                 <View
@@ -33,7 +34,14 @@ const StoryItem = ({ storyId }) => {
                     <Text style={styles.storyByText}>By: {story.by}</Text>
                     <Text style={styles.storyScoreText}>Score: {story.score}</Text>
                 </View>
-                <Text key={story.title} style={styles.storyTitleText}>{story.title}</Text>
+                <Text 
+                    key={story.title} 
+                    style={styles.storyTitleText}
+                >
+                    {story.title + '  '}
+                    {story.url && <Ionicons name='md-open'/>}
+                </Text>
+                
             </View>
         </TouchableWithoutFeedback>
     )

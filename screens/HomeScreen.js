@@ -15,7 +15,7 @@ import { MonoText } from '../components/StyledText';
 import { getPopularStories } from '../services/hnAPI'
 import NewsList from '../components/NewsList'
 
-export default function HomeScreen() {
+export default function HomeScreen(props) {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -52,7 +52,7 @@ export default function HomeScreen() {
             title="Press Me"
           />
         </View>
-        <NewsList getStories={getPopularStories}/>
+        <NewsList getStories={getPopularStories} navigation={props.navigation}/>
       </ScrollView>
     </View>
   );
