@@ -17,7 +17,9 @@ const StoryItem = (props) => {
     }, [])
 
     const handleStoryPress = () => {
-        (story.url) ? WebBrowser.openBrowserAsync(story.url) : props.navigation.push("Story");
+        (story.url) ? 
+            WebBrowser.openBrowserAsync(story.url) : 
+            props.navigation.push("Story", { storyId: props.storyId});
     }
 
     if (!story) return <Text key={props.storyId + 1}>loading story</Text>;
