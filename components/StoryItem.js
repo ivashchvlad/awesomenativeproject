@@ -32,7 +32,8 @@ const StoryItem = (props) => {
                 style={styles.story}    
             >
                 <View
-                    style={styles.storyCredential}>
+                    style={styles.storyCredential}
+                >
                     <Text style={styles.storyByText}>By: {story.by}</Text>
                     <Text style={styles.storyScoreText}>Score: {story.score}</Text>
                 </View>
