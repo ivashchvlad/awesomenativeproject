@@ -23,7 +23,6 @@ export const StoryScreen = ({ navigation }) => {
     }, []);
 
     const goBackHome = () => {
-        console.log('WhaT?!')
         navigation.navigate('Main');
     }
 
@@ -47,22 +46,15 @@ export const StoryScreen = ({ navigation }) => {
     )
 }
 
-StoryScreen.navigationOptions = {
+StoryScreen.navigationOptions = ({navigation}) => ({
     title: "Story",
+    goDOIT: () => {console.log('ok')},
     headerLeft: (
-        <Button  title={"< Back"} onPress={goDOIT}/>
-    )
-};
+        <Button  title={"< Back"} onPress={() => {navigation.navigate('Ask')}}/>
+    ),
+});
 
-const goDOIT = () => {
-    console.log('JUST DO IT');
-}
-
-
-
-    export default StoryScreen
-
-
+export default StoryScreen
 
 export const StoryStack = createStackNavigator({
         Story: StoryScreen,
