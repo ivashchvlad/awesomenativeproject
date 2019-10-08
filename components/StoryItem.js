@@ -41,10 +41,9 @@ const StoryItem = (props) => {
                     key={story.title} 
                     style={styles.storyTitleText}
                 >
-                    {story.title + '  '}
+                    {(story.title)} {'  '}
                     {story.url && <Ionicons name='md-open'/>}
                 </Text>
-                
             </View>
         </TouchableWithoutFeedback>
     )

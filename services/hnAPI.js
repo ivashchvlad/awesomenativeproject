@@ -22,3 +22,7 @@ export const getPopularStories = async () => {
 export const getAskStories = async () => {
     return await axios.get(askURL).then(({data}) => data.slice(0, 10));
 }
+
+export const getKids = async (kidsId) => {
+    return await kidsId.slice(0, 10).map(id => getStory(id));
+}

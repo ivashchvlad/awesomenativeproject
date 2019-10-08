@@ -39,6 +39,7 @@ HomeStack.path = '';
 const AskStack = createStackNavigator(
   {
     Ask: AskScreen,
+    Story: StoryScreen,
   },
   config
 );
