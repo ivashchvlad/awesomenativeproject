@@ -10,6 +10,10 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+
+
 const StoryItem = (props) => {
     const [story, setStory] = useState();
     useEffect(() => {
@@ -21,6 +25,10 @@ const StoryItem = (props) => {
             WebBrowser.openBrowserAsync(story.url) : 
             props.navigation.push("Story", { storyId: props.storyId});
     }
+
+    TimeAgo.addLocale(en)
+    const timeAgo = new TimeAgo('en-US')
+
 
     if (!story) return <Text key={props.storyId + 1}>loading story</Text>;
     return (
@@ -34,8 +42,15 @@ const StoryItem = (props) => {
                 <View
                     style={styles.storyCredential}
                 >
-                    <Text style={styles.storyByText}>By: {story.by}</Text>
-                    <Text style={styles.storyScoreText}>Score: {story.score}</Text>
+                    <Text style={styles.storyByText}>
+                        By: {story.by}
+                    </Text>
+                    <Text style={styles.storyTimeText}>
+                        { timeAgo.format(kid.time*1000, 'twitter') }
+                    </Text>
+                    <Text style={styles.storyScoreText}>
+                        Score: {story.score}
+                    </Text>
                 </View>
                 <Text 
                     key={story.title} 
@@ -60,13 +75,19 @@ const styles = StyleSheet.create({
     },
     storyCredential: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         marginBottom: 10,
         marginTop: 3,
     },
     storyByText: {
         fontSize: 13,
         color: '#147EFB',
+    },
+    storyTimeText: {
+        fontSize: 13,
+        color: 'rgb(52, 199, 89)',
+        paddingLeft: 5,
+        paddingRight: 5
     },
     storyScoreText: {
         fontSize: 13,
