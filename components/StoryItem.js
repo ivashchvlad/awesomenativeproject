@@ -46,7 +46,7 @@ const StoryItem = (props) => {
                         By: {story.by}
                     </Text>
                     <Text style={styles.storyTimeText}>
-                        { timeAgo.format(kid.time*1000, 'twitter') }
+                        { timeAgo.format(story.time*1000, 'twitter') }
                     </Text>
                     <Text style={styles.storyScoreText}>
                         Score: {story.score}

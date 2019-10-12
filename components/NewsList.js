@@ -7,17 +7,13 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-const NewsList = ({getStories, navigation}) => {
-    const [latestNews, setLatestNews] = useState([]);
-    useEffect(() => {
-        getStories().then(res => setLatestNews(res));
-    },[])
-    if(!latestNews) {
+const NewsList = ({stories, navigation, refreshing}) => {
+    if(!stories) {
         return <Text>Loading latest news...</Text>
     }
     return (
         <FlatList
-            data={latestNews}
+            data={stories}
             renderItem={({item, id}) =>
                 <StoryItem key={id} storyId={item} navigation={navigation}/>
             }

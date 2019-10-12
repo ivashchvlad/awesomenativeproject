@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   Platform,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Button,
+  RefreshControl,
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
@@ -16,11 +17,30 @@ import { getPopularStories } from '../services/hnAPI'
 import NewsList from '../components/NewsList'
 
 export default function HomeScreen(props) {
+  const [latestNews, setLatestNews] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  
+  useEffect(() => {
+    getPopularStories().then(res => setLatestNews(res));
+  }, [])
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getPopularStories().then(res => {
+      setLatestNews(res);
+      setRefreshing(false);
+    });
+  }, [refreshing]);
+
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.welcomeContainer}>
           <Image
             source={
@@ -52,7 +72,7 @@ export default function HomeScreen(props) {
             title="Press Me"
           />
         </View>
-        <NewsList getStories={getPopularStories} navigation={props.navigation}/>
+        <NewsList stories={latestNews} navigation={props.navigation} reload={refreshing} />
       </ScrollView>
     </View>
   );
