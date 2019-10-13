@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   Platform,
@@ -17,63 +17,71 @@ import { getPopularStories } from '../services/hnAPI'
 import NewsList from '../components/NewsList'
 
 export default function HomeScreen(props) {
-  const [latestNews, setLatestNews] = useState([]);
+  const [latestNewsIds, setLatestNewsIds] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   useEffect(() => {
-    getPopularStories().then(res => setLatestNews(res));
+    getPopularStories().then(res => setLatestNewsIds(res));
   }, [])
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getPopularStories().then(res => {
-      setLatestNews(res);
+      setLatestNewsIds(res);
       setRefreshing(false);
     });
   }, [refreshing]);
 
+  const header = (
+    <View style={styles.header}>
+      <View style={styles.welcomeContainer}>
+        <Image
+          source={
+            __DEV__
+              ? require('../assets/images/kylo.jpg')
+              : require('../assets/images/robot-prod.png')
+          }
+          style={styles.welcomeImage}
+        />
+      </View>
+      <View style={styles.getStartedContainer}>
+        { /*<DevelopmentModeNotice /> */}
+
+        <Text style={styles.getStartedText}>Hello there! How's it going?</Text>
+
+        <View
+          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
+          <MonoText>(general Kenoby?)</MonoText>
+        </View>
+
+        <Text style={styles.getStartedText}>
+          This awesome app will save your day!
+            </Text>
+        <Button
+          onPress={() => {
+            alert('You are breathtaking!');
+          }}
+          title="Press Me"
+        />
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <ScrollView
+      <View
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       >
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/kylo.jpg')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
-        <View style={styles.getStartedContainer}>
-          { /*<DevelopmentModeNotice /> */}
-
-          <Text style={styles.getStartedText}>Hello there! How's it going?</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>(general Kenoby?)</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            This awesome app will save your day!
-          </Text>
-          <Button
-            onPress={() => {
-              alert('You are breathtaking!');
-            }}
-            title="Press Me"
-          />
-        </View>
-        <NewsList stories={latestNews} navigation={props.navigation} reload={refreshing} />
-      </ScrollView>
+        <NewsList
+          stories={latestNewsIds}
+          navigation={props.navigation}
+          handleRefreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          header={header}
+        />
+      </View>
     </View>
   );
 }
@@ -105,6 +113,7 @@ function DevelopmentModeNotice() {
   }
 }
 
+
 function handleLearnMorePress() {
   WebBrowser.openBrowserAsync(
     'https://docs.expo.io/versions/latest/workflow/development-mode/'
@@ -126,6 +135,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 0,
+  },
+  header: {
+    backgroundColor: 'white',
   },
   welcomeContainer: {
     alignItems: 'center',

@@ -20,13 +20,12 @@ export default function AskScreen(props) {
   }, [refreshing]);
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <NewsList stories={askStories} navigation={props.navigation}/>  
-    </ScrollView>
+      <NewsList 
+        stories={askStories} 
+        navigation={props.navigation}
+        handleRefreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }/> 
   );
 }
 

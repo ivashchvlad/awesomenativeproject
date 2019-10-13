@@ -12,15 +12,15 @@ export const getStory = async (storyId) => {
 }
 
 export const getLatestStoriesId = async () => {
-    return await axios.get(latestURL).then(({ data }) => data.slice(0, 10));
+    return await axios.get(latestURL).then(({ data }) => data);
 }
 
 export const getPopularStories = async () => {
-    return await axios.get(popularURL).then(({data}) => data.slice(0, 10));
+    return await axios.get(popularURL).then(({ data }) => data);
 }
 
 export const getAskStories = async () => {
-    return await axios.get(askURL).then(({data}) => data.slice(0, 10));
+    return await axios.get(askURL).then(({data}) => data);
 }
 
 export const getKids = async (kidsId) => {

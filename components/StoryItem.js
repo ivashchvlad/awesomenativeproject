@@ -18,7 +18,7 @@ const StoryItem = (props) => {
     const [story, setStory] = useState();
     useEffect(() => {
         getStory(props.storyId).then(_story => setStory(_story));
-    }, [])
+    }, [props])
 
     const handleStoryPress = () => {
         (story.url) ? 
@@ -30,7 +30,7 @@ const StoryItem = (props) => {
     const timeAgo = new TimeAgo('en-US')
 
 
-    if (!story) return <Text key={props.storyId + 1}>loading story</Text>;
+    if (!story) return <Text key={props.storyId + 1} style={styles.story}>loading story</Text>;
     return (
         <TouchableWithoutFeedback
             onPress={handleStoryPress}
