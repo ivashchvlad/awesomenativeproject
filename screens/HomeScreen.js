@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Image,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Button,
   RefreshControl,
@@ -112,7 +110,6 @@ function DevelopmentModeNotice() {
     );
   }
 }
-
 
 function handleLearnMorePress() {
   WebBrowser.openBrowserAsync(

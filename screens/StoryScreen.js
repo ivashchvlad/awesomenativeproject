@@ -15,6 +15,7 @@ import { getStory, getKids } from '../services/hnAPI';
 import HtmlNativeView from '../components/HtmlNativeView';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import KidsList from '../components/KidsList';
 
 
 export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
@@ -39,24 +40,8 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
 
     if (!story) return null;
 
-    const list = kids.map(kid => {
-        return (
-            <View
-                key={kid.id}
-                id={'comment'}
-                style={styles.comment}
-            >
-                <View
-                    style={styles.storyCredential}
-                >
-                    <Text style={styles.storyByText}>By: {kid.by}</Text>
-                    <Text style={styles.storyTimeText}>
-                        { timeAgo.format(kid.time*1000, 'twitter') }
-                    </Text>
-                </View>
-                <HtmlNativeView key={kid.id} html={kid.text} />
-            </View>
-        );
+    const list = story.kids.map(kidId => {
+        return <KidsList key={kidId} itemId={kidId} />
     });
 
     return (

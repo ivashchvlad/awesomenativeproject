@@ -12,19 +12,31 @@ import {
 function KidsList({itemId}) {
     const [list, setList] = useState([]);
     useEffect(() => {
-        getKids(itemId, 0).then(() => console.log('ok!'));
+        getKids(itemId, 0).then((item) => setList(item));
+        getKids(itemId, 0).then((item) => {
+            console.log('++++++++++++getKids()+++++++++++++=')
+            console.log(item)
+        });
+            
+        //getKids(itemId, 0).then(item => console.log(item));
     }, []);
 
-    const getKids = async (itemId, level) => {
-        getStory(itemId).then(item => {
+    let lists = [];
+    const getKids = async (itemId, level, commentlist) => {
+        return getStory(itemId).then(async item => {
+            console.log(item.id+' '); console.log(level+' '); console.log(item.kids); console.log(lists); console.log('===============NEXT===============');
             if (item.kids) {
-                item.kids.map(kid => getKids(kid, level+1))
+                let r = await Promise.all(item.kids.map(kid => 
+                    getKids(kid, level+1)
+                ));
+                return [(<Comment key={item.id} kid={item} level={level}/>), ...r];
             }
-            setList([...list, (<Comment kid={item} level={level}/>)])
+            return (<Comment key={item.id} kid={item} level={level}/>);
+        }).catch(() => {
+            return lists;
         })
     }
     if(!list) return <Text>loading list</Text>
-    console.log(list);
     return (
         <View>
             {list}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, RefreshControl } from 'react-native';
+import { StyleSheet, RefreshControl } from 'react-native';
 import NewsList from '../components/NewsList'
 import { getAskStories } from '../services/hnAPI'
 
