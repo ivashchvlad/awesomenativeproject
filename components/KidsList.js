@@ -1,42 +1,34 @@
 import React, {useState, useEffect} from 'react';
 import { getStory } from '../services/hnAPI';
-import HtmlNativeView from '../components/HtmlNativeView';
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en';
+import CommentItem from './CommentItem'
 import {
-    StyleSheet,
     Text,
     View,
 } from 'react-native';
 
 function KidsList({itemId}) {
     const [list, setList] = useState([]);
+
     useEffect(() => {
-        getKids(itemId, 0).then((item) => setList(item));
-        getKids(itemId, 0).then((item) => {
-            console.log('++++++++++++getKids()+++++++++++++=')
-            console.log(item)
-        });
-            
-        //getKids(itemId, 0).then(item => console.log(item));
+        getKids(itemId, 0).then((res) => setList(res));
     }, []);
 
-    let lists = [];
-    const getKids = async (itemId, level, commentlist) => {
+    //  Recursion function to get all subcomments
+    const getKids = async (itemId, level) => {
         return getStory(itemId).then(async item => {
-            console.log(item.id+' '); console.log(level+' '); console.log(item.kids); console.log(lists); console.log('===============NEXT===============');
             if (item.kids) {
-                let r = await Promise.all(item.kids.map(kid => 
+                let restComments = await Promise.all(item.kids.map(kid => 
                     getKids(kid, level+1)
-                ));
-                return [(<Comment key={item.id} kid={item} level={level}/>), ...r];
+            ));
+                return [(<CommentItem key={item.id} kid={item} level={level}/>), ...restComments];
             }
-            return (<Comment key={item.id} kid={item} level={level}/>);
+            return (<CommentItem key={item.id} kid={item} level={level}/>);
         }).catch(() => {
-            return lists;
+            return <Text>loading failed...</Text>
         })
     }
-    if(!list) return <Text>loading list</Text>
+
+    if(!list) return <Text style={{heigth: 300, backgroundColor: 'red'}}>loading list</Text>
     return (
         <View>
             {list}
@@ -45,62 +37,3 @@ function KidsList({itemId}) {
 }
 
 export default KidsList
-
-// Recursion function to get all comments and subcomments
-
-
-const Comment = ({kid, level}) => {
-    TimeAgo.addLocale(en);
-    const timeAgo = new TimeAgo('en-US');
-    if (!kid) return <Text>loading Comment</Text>
-    return (
-        <View
-            key={kid.id}
-            id={'comment'}
-            style={{ 
-                paddingLeft: level*20,
-                backgroundColor: "white",
-                marginBottom: 10,
-                paddingBottom: 10, 
-            }}
-        >
-            <View
-                style={styles.storyCredential}
-            >
-                <Text style={styles.storyByText}>By: {kid.by}</Text>
-                <Text style={styles.storyTimeText}>
-                    {timeAgo.format(kid.time * 1000, 'twitter')}
-                </Text>
-            </View>
-            <HtmlNativeView key={kid.id} html={kid.text} />
-        </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    comment: {
-        backgroundColor: "white",
-        marginBottom: 10,
-        paddingBottom: 10,
-    },
-    storyCredential: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        paddingBottom: 5,
-        paddingTop: 5,
-        backgroundColor: "white",
-    },storyByText: {
-        fontSize: 13,
-        color: '#147EFB',
-    },
-    storyTimeText: {
-        fontSize: 13,
-        color: 'rgb(52, 199, 89)',
-        paddingLeft: 5,
-        paddingRight: 5
-    },
-    storyScoreText: {
-        fontSize: 13,
-        color: '#FC3158',
-    },
-});

@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Platform,
 } from 'react-native';
+
 import { FlatList } from 'react-native-gesture-handler';
 
 const NewsList = ({ stories, navigation, handleRefreshControl, header }) => {
@@ -17,8 +18,10 @@ const NewsList = ({ stories, navigation, handleRefreshControl, header }) => {
     }, [stories]);
 
     const handleLoadMore = () => {
-        setStories([..._stories, ...stories.slice(counter, counter + 5)]);
-        setCounter(counter + 5);
+        if (counter < stories.length) {
+            setStories([..._stories, ...stories.slice(counter, counter + 5)]);
+            setCounter(counter + 5);
+        }
     }
 
     if (!stories) {
