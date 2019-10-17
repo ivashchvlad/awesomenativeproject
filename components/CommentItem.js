@@ -21,7 +21,8 @@ const CommentItem = ({kid, level}) => {
                 paddingLeft: (level*20)>100 ? 100 : level==0 ? 5 : level*20,
                 backgroundColor: "white",
                 marginBottom: 10,
-                paddingBottom: 10, 
+                paddingBottom: 10,
+                color: 'grey'
             }}
         >
             <View
@@ -32,7 +33,8 @@ const CommentItem = ({kid, level}) => {
                     {timeAgo.format(kid.time * 1000, 'twitter')}
                 </Text>
             </View>
-            <HTMLView key={kid.id} value={kid.text}/>
+            { kid.deleted? <Text>comment deleted</Text> :
+            <HTMLView key={kid.id} value={kid.text}/> }
         </View>
     )
 }
