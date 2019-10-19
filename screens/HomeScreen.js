@@ -11,24 +11,48 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
-import { getPopularStories } from '../services/hnAPI'
+import { getPopularStoriesId, getLatestStoriesId } from '../services/hnAPI'
 import NewsList from '../components/NewsList'
 
 export default function HomeScreen(props) {
   const [latestNewsIds, setLatestNewsIds] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeLink, setActiveLink] = useState([true, false])
 
   useEffect(() => {
-    getPopularStories().then(res => setLatestNewsIds(res));
+    if (activeLink[0]) getPopularStoriesId().then(res => setLatestNewsIds(res));
+    else getLatestStoriesId().then(res => setLatestNewsIds(res));
   }, [])
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getPopularStories().then(res => {
-      setLatestNewsIds(res);
-      setRefreshing(false);
-    });
+    if (activeLink[0]) {
+      getPopularStoriesId().then(res => {
+        setLatestNewsIds(res);
+        setRefreshing(false);
+      });
+    } else {
+      getLatestStoriesId().then(res => {
+        setLatestNewsIds(res);
+        setRefreshing(false);
+      });
+    }
+
   }, [refreshing]);
+
+  const handleOnPressPopular = () => {
+    if (!activeLink[0]){
+      setActiveLink([true, false])
+      onRefresh();
+    }
+  }
+
+  const handleOnPressNew = () => {
+    if (!activeLink[1]){
+      setActiveLink([false, true])
+      onRefresh();
+    }
+  }
 
   const header = (
     <View style={styles.header}>
@@ -61,6 +85,18 @@ export default function HomeScreen(props) {
           }}
           title="Press Me"
         />
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <Button
+            onPress={handleOnPressPopular}
+            style={{ backgroundColor: activeLink[0] ? 'blue' : 'white' }}
+            title="Popular"
+          />
+          <Button
+            onPress={handleOnPressNew}
+            style={{ backgroundColor: activeLink[1] ? 'blue' : 'white' }}
+            title="New"
+          />
+        </View>
       </View>
     </View>
   );

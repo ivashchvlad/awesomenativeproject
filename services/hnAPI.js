@@ -15,7 +15,7 @@ export const getLatestStoriesId = async () => {
     return await axios.get(latestURL).then(({ data }) => data);
 }
 
-export const getPopularStories = async () => {
+export const getPopularStoriesIdgit = async () => {
     return await axios.get(popularURL).then(({ data }) => data);
 }
 
