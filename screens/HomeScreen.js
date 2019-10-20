@@ -23,6 +23,18 @@ export default function HomeScreen(props) {
     if (activeLink[0]) getPopularStoriesId().then(res => setLatestNewsIds(res));
     else getLatestStoriesId().then(res => setLatestNewsIds(res));
   }, [])
+  
+  useEffect(()=>{
+    if (activeLink[0]) {
+      getPopularStoriesId().then(res => {
+        setLatestNewsIds(res);
+      });
+    } else {
+      getLatestStoriesId().then(res => {
+        setLatestNewsIds(res);
+      });
+    }
+  }, [activeLink])
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -43,14 +55,12 @@ export default function HomeScreen(props) {
   const handleOnPressPopular = () => {
     if (!activeLink[0]){
       setActiveLink([true, false])
-      onRefresh();
     }
   }
 
   const handleOnPressNew = () => {
     if (!activeLink[1]){
-      setActiveLink([false, true])
-      onRefresh();
+      setActiveLink([false, true]);
     }
   }
 
@@ -88,12 +98,12 @@ export default function HomeScreen(props) {
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Button
             onPress={handleOnPressPopular}
-            style={{ backgroundColor: activeLink[0] ? 'blue' : 'white' }}
+            color={activeLink[0] ? 'darkblue' : 'blue' }
             title="Popular"
           />
           <Button
             onPress={handleOnPressNew}
-            style={{ backgroundColor: activeLink[1] ? 'blue' : 'white' }}
+            color={activeLink[1] ? 'darkblue' : 'blue' }
             title="New"
           />
         </View>
