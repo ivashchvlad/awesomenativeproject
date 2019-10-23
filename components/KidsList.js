@@ -5,10 +5,14 @@ import {
     Text,
     View,
     TouchableWithoutFeedback,
+    Animated,
 } from 'react-native';
 
 function KidsList({ itemId }) {
     const [list, setList] = useState([]);
+    const [maxHeight, setMaxHeight] = useState(200);
+    const [expanded, setExpanded] = useState(true)
+    const [animVal] = useState(new Animated.Value())
 
     useEffect(() => {
         getKids(itemId, 0).then((res) => setList(res));
@@ -37,13 +41,36 @@ function KidsList({ itemId }) {
             getKids(itemId, 0).then((res) => setList(res));
         }
     }
+    const handleSetMaxHeight = (event) => {
+        if(event.nativeEvent.layout.height) {
+            setMaxHeight(event.nativeEvent.layout.height);
+        }
+    }
+
+    const tougleList = () => {
+        let initialValue = expanded ? maxHeight : 10,
+            finalValue = expanded ? 10 :  maxHeight;
+        console.log('ok');
+        setExpanded(!expanded);
+
+        animVal.setValue(initialValue);  //Step 3
+        Animated.spring(     //Step 4
+            animVal,
+            {
+                toValue: finalValue
+            }
+        ).start();  //Step 5
+    }
 
     if (!list) return <Text style={{ heigth: 300, backgroundColor: 'red' }}>loading list</Text>
     return (
-        <TouchableWithoutFeedback onPress={handleOnPress}>
-            <View>
+        <TouchableWithoutFeedback
+            onPress={tougleList}
+            
+        >
+            <Animated.View style={{heigth: animVal}}>
                 {list}
-            </View>
+            </Animated.View>
         </TouchableWithoutFeedback>
     )
 }

@@ -10,8 +10,8 @@ import { getStory } from '../services/hnAPI';
 import HTMLView from 'react-native-htmlview';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import KidsList from '../components/KidsList';
 import { FlatList } from 'react-native-gesture-handler';
+import CommentItem from '../components/CommentItem';
 
 export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
     const [story, setStory] = useState();
@@ -88,7 +88,7 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
             style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.1)' }}
             data={comments}
             renderItem={({ item }) => {
-                return (<KidsList itemId={item} />)
+                return (<CommentItem item={item} level={0} key={item.id}/>)
             }}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={handleLoadMore}
