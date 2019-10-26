@@ -5,6 +5,7 @@ import {
     View,
     RefreshControl
 } from 'react-native';
+import axios from 'axios'
 
 import { getStory } from '../services/hnAPI';
 import HTMLView from 'react-native-htmlview';
@@ -19,8 +20,11 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
     const [counter, setCounter] = useState(3);
     const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+
         let id = JSON.stringify(navigation.getParam('storyId', '0'));
-        getStory(id).then(_story => {
+        getStory(id, source.token).then(_story => {
             setStory(_story);
             if (_story.kids) {
                 setComments(_story.kids.slice(0, 2));
@@ -28,7 +32,11 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
             else {
                 setComments([]);
             }
+        }).catch(err => {
+            if(axios.isCancel(err)) console.log('canceled'); else throw err
         });
+
+        return cleanup = () => source.cancel();
     }, []);
 
     TimeAgo.addLocale(en)
@@ -87,9 +95,9 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
         <FlatList
             style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.1)' }}
             data={comments}
-            renderItem={({ item }) => {
-                return (<CommentItem item={item} level={0} key={item.id}/>)
-            }}
+            renderItem={({ item }) => 
+                <CommentItem item={item} level={0}/>
+            }
             keyExtractor={(item, index) => index.toString()}
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0}

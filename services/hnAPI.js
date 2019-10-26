@@ -7,8 +7,9 @@ export const askURL = `${baseURL}askstories.json`;
 export const storyURL = `${baseURL}item/`;
 
 
-export const getStory = async (storyId) => {
-    return await axios.get(`${storyURL + storyId}.json`).then(({data}) => data);
+export const getStory = async (storyId, cancelToken) => {
+    return await axios.get(`${storyURL + storyId}.json`, { cancelToken: cancelToken})
+        .then(({data}) => data);
 }
 
 export const getLatestStoriesId = async () => {

@@ -10,13 +10,21 @@ import {
     Animated
 } from 'react-native';
 import { getStory } from '../services/hnAPI';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback, FlatList } from 'react-native-gesture-handler';
+import { withOrientation } from 'react-navigation';
+import axios from 'axios'
 
 const CommentItem = ({ item, level }) => {
     const [comment, setComment] = useState();
     const [open, setOpen] = useState(true);
     useEffect(() => {
-        getStory(item).then(_story => setComment(_story));
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+        getStory(item, source.token).then(_story => setComment(_story))
+        .catch(err => {
+            if(axios.isCancel(err)) console.log('canceled'); else throw err
+        });
+        return cleanup = () => source.cancel();
     }, [])
 
     TimeAgo.addLocale(en);
@@ -26,7 +34,8 @@ const CommentItem = ({ item, level }) => {
         setOpen(!open);
     }
 
-    if (!comment) return <Text>loading Comment</Text>
+    if (!comment) return <Text style={styles.loading}>loading Comment</Text>
+
     return (
         <View>
             <TouchableWithoutFeedback
@@ -37,7 +46,9 @@ const CommentItem = ({ item, level }) => {
                     id={'comment'}
                     style={{
                         paddingHorizontal: 5,
-                        paddingLeft: (level * 20) > 100 ? 100 : level == 0 ? 5 : level * 20,
+                        paddingLeft: (level * 15) > 100 ? 100 : level == 0 ? 5 : level * 15,
+                        borderLeftColor: 'grey',
+                        borderLeftWidth: 5*level,
                         backgroundColor: "white",
                         marginBottom: 10,
                         paddingBottom: 10,
@@ -51,6 +62,9 @@ const CommentItem = ({ item, level }) => {
                         <Text style={styles.storyTimeText}>
                             {timeAgo.format(comment.time * 1000, 'twitter')}
                         </Text>
+                        <Text style={styles.storyByText}>
+                            {comment.kids && (open ? '[-]' : '[+]')}
+                        </Text>
                     </View>
                     {comment.deleted ? <Text>comment deleted</Text> :
                         <HTMLView key={comment.id} value={comment.text} />}
@@ -58,9 +72,19 @@ const CommentItem = ({ item, level }) => {
             </TouchableWithoutFeedback>
             <Collapsible collapsed={!open}>
             <View>
-                {comment.kids && comment.kids.map(kid =>
-                    <CommentItem item={kid} level={level + 1} key={kid.id} />
-                )}
+                {comment.kids && 
+                    <FlatList
+                        data={comment.kids}
+                        renderItem={({item}) => 
+                            <CommentItem 
+                                key={item.id} 
+                                item={item} 
+                                level={level + 1} 
+                            />
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                }
             </View>
             </Collapsible>
         </View>
@@ -70,6 +94,10 @@ const CommentItem = ({ item, level }) => {
 export default CommentItem
 
 const styles = StyleSheet.create({
+    loading: {
+        height: 100,
+        backgroundColor: 'white',
+    },
     comment: {
         backgroundColor: "white",
         marginBottom: 10,
