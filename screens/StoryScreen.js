@@ -20,6 +20,7 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
     const [counter, setCounter] = useState(3);
     const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
+        //CancelToken cancel HTTTP request after leaving screen
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
 
@@ -33,12 +34,14 @@ export const StoryScreen = ({ navigation, onNavigationStateChange }) => {
                 setComments([]);
             }
         }).catch(err => {
-            if(axios.isCancel(err)) console.log('canceled'); else throw err
+            if(axios.isCancel(err)) console.log('requiest canceled' + err);
+            else console.error(err);
         });
 
         return cleanup = () => source.cancel();
     }, []);
 
+    //setting up timeAgo component
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US')
 

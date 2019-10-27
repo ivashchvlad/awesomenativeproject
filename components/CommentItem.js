@@ -7,7 +7,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Animated
 } from 'react-native';
 import { getStory } from '../services/hnAPI';
 import { TouchableWithoutFeedback, FlatList } from 'react-native-gesture-handler';
@@ -46,8 +45,8 @@ const CommentItem = ({ item, level }) => {
                     id={'comment'}
                     style={{
                         paddingHorizontal: 5,
-                        paddingLeft: (level * 15) > 100 ? 100 : level == 0 ? 5 : level * 15,
-                        borderLeftColor: 'grey',
+                        paddingLeft: (level * 12) > 100 ? 100 : level == 0 ? 5 : level * 12,
+                        borderLeftColor: `rgba(52, 118, 217, ${level*0.2})`,
                         borderLeftWidth: 5*level,
                         backgroundColor: "white",
                         marginBottom: 10,

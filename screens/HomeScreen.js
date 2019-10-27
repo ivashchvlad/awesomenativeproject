@@ -9,6 +9,7 @@ import {
   Button,
   RefreshControl,
 } from 'react-native';
+import axios from 'axios'
 
 import { MonoText } from '../components/StyledText';
 import { getPopularStoriesId, getLatestStoriesId } from '../services/hnAPI'
@@ -23,17 +24,23 @@ export default function HomeScreen(props) {
     if (activeLink[0]) getPopularStoriesId().then(res => setLatestNewsIds(res));
     else getLatestStoriesId().then(res => setLatestNewsIds(res));
   }, [])
-  
-  useEffect(()=>{
+
+  useEffect(() => {
+    //CancelToken cancel HTTTP request after leaving screen
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
     if (activeLink[0]) {
-      getPopularStoriesId().then(res => {
+      getPopularStoriesId(source.token).then(res => {
         setLatestNewsIds(res);
       });
     } else {
-      getLatestStoriesId().then(res => {
+      getLatestStoriesId(source.token).then(res => {
         setLatestNewsIds(res);
       });
     }
+
+    return cleanuo = () => source.cancel();
   }, [activeLink])
 
   const onRefresh = React.useCallback(() => {
@@ -53,13 +60,13 @@ export default function HomeScreen(props) {
   }, [refreshing]);
 
   const handleOnPressPopular = () => {
-    if (!activeLink[0]){
+    if (!activeLink[0]) {
       setActiveLink([true, false])
     }
   }
 
   const handleOnPressNew = () => {
-    if (!activeLink[1]){
+    if (!activeLink[1]) {
       setActiveLink([false, true]);
     }
   }
@@ -88,22 +95,17 @@ export default function HomeScreen(props) {
 
         <Text style={styles.getStartedText}>
           This awesome app will save your day!
-            </Text>
-        <Button
-          onPress={() => {
-            alert('You are breathtaking!');
-          }}
-          title="Press Me"
-        />
+        </Text>
+
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Button
             onPress={handleOnPressPopular}
-            color={activeLink[0] ? 'darkblue' : 'blue' }
+            color={activeLink[0] ? 'rgb(0, 122, 255)' : 'rgb(70, 192, 255)'}
             title="Popular"
           />
           <Button
             onPress={handleOnPressNew}
-            color={activeLink[1] ? 'darkblue' : 'blue' }
+            color={activeLink[1] ? 'rgb(0, 122, 255)' : 'rgb(70, 192, 255)'}
             title="New"
           />
         </View>
